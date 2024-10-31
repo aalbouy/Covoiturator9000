@@ -1,34 +1,52 @@
 <script setup>
-import { ref } from 'vue'
-import { mdiStarDavid } from '@mdi/js'
+import { ref, computed } from 'vue'
 
 const props = defineProps({
   name: String,
-  money_due: Number,
-  is_fav: Boolean,
 })
 
+const money_due = ref(0)
+const is_fav = ref(false)
+const is_selected = ref(false)
+
+// Computed property to dynamically set the icon class based on `isActive`
+const icon_class = computed(() =>
+  is_fav.value ? 'mdi mdi-star' : 'mdi mdi-star-outline',
+)
+
+const background_class = computed(() =>
+  is_selected.value
+    ? 'has-background-primary has-text-primary-light-invert'
+    : 'has-background-dark has-text-primary-light',
+)
+
 function toggle_fav() {
-  console.log('toggle_fav')
   is_fav.value = !is_fav.value
+  emits('fav-updated', props.name, is_fav.value)
 }
+
+function toggle_selected() {
+  is_selected.value = !is_selected.value
+}
+
+const emits = defineEmits(['fav-updated'])
 </script>
 
 <template>
   <div
-    class="cell py-3 px-4 has-background-primary has-text-primary-light-invert has-radius-normal person"
+    :class="background_class"
+    class="cell custom-box py-3 px-4 has-radius-normal"
+    @click="toggle_selected"
   >
-    <div class="fixed-grid">
-      <div class="grid">
-        <div class="has-text-weight-bold is-family-primary is-size-2">
-          {{ name }}
-        </div>
-        <div class="has-text-right">
-          <span class="icon" @click="toggle_fav">
-            <i class="mdi {{ is_fav ? mdi-star-outline : mdi-star }}"></i>
-          </span>
-        </div>
-      </div>
+    <div
+      class="top-left has-text-weight-bold is-family-primary is-size-2 is-unselectable"
+    >
+      {{ name }}
     </div>
+    <span class="top-right icon is-size-4" @click="toggle_fav" v-on:click.stop>
+      <i :class="icon_class"></i>
+    </span>
+    <div class="is-size-1 bottom-center is-unselectable">🥹</div>
+    <div class="bottom-right has-text-primary-light">{{ money_due }}€</div>
   </div>
 </template>

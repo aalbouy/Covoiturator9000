@@ -43,3 +43,33 @@ a,
 .person {
   height: 200px;
 }
+
+.custom-box {
+  position: relative;
+  aspect-ratio: 5/3;
+}
+
+.top-left {
+  position: absolute;
+  top: 3%;
+  left: 3%;
+}
+
+.top-right {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.bottom-center {
+  position: absolute;
+  bottom: 20%;
+  left: 30%;
+  transform: translateX(-30%);
+}
+
+.bottom-right {
+  position: absolute;
+  bottom: 3%;
+  right: 3%;
+}
