@@ -4,18 +4,23 @@ import Person from './components/person-item.vue'
 
 const persons = ref([])
 const new_person_name = ref('')
+const new_person_emoji = ref('')
 const id_person = ref('')
 
 const modal_opened = ref(false)
 
 function add_person() {
-  if (new_person_name.value.length === 0) {
+  if (
+    new_person_name.value.length === 0 ||
+    new_person_emoji.value.length === 0
+  ) {
     return
   }
 
   persons.value.push({
     id: id_person.value++,
     name: new_person_name.value,
+    emoji: new_person_name.value,
     money_due: 0.0,
     is_fav: false,
     force: 0,
@@ -26,6 +31,7 @@ function add_person() {
   }
 
   new_person_name.value = ''
+  new_person_emoji.value = ''
 }
 
 function handle_emit_fav(name, fav) {
@@ -39,6 +45,8 @@ function toggle_modal() {
   if (new_person_name.value.length === 0) {
     return
   }
+
+  new_person_emoji.value = ''
 
   modal_opened.value = !modal_opened.value
 }
@@ -65,11 +73,14 @@ const sorted_persons = computed(() => {
     <div class="modal-content">
       <div class="box">
         <p class="is-size-5 has-text-centered mb-4">
-          Créer le profil de {{ new_person_name }} ?
+          Choisir l'émoji pour {{ new_person_name }} ?
         </p>
-        <div class="buttons is-centered">
-          <button class="button is-success" @click="add_person">Oui</button>
-          <button class="button is-danger" @click="toggle_modal">Non</button>
+        <input class="input mb-4 mgl-large mgr-large" type="text" placeholder="🤪" v-model="new_person_emoji" />
+        <div class="buttons is-centered mb-4">
+          <button class="button is-success" @click="add_person">Valider</button>
+          <button class="button is-danger" @click="toggle_modal">
+            Annuler
+          </button>
         </div>
       </div>
     </div>

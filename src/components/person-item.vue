@@ -3,6 +3,7 @@ import { ref, computed } from 'vue'
 
 const props = defineProps({
   name: String,
+  emoji: String,
 })
 
 const money_due = ref(0)
@@ -46,7 +47,7 @@ const emits = defineEmits(['fav-updated'])
     <span class="top-right icon is-size-4" @click="toggle_fav" v-on:click.stop>
       <i :class="icon_class"></i>
     </span>
-    <div class="is-size-1 bottom-center is-unselectable">🥹</div>
+    <div class="is-size-1 bottom-center is-unselectable">{{ emoji }}</div>
     <div class="bottom-right has-text-primary-light">{{ money_due }}€</div>
   </div>
 </template>
