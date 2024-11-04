@@ -28,9 +28,10 @@ function toggle_fav() {
 
 function toggle_selected() {
   is_selected.value = !is_selected.value
+  emits('sel-updated', props.name, is_selected.value)
 }
 
-const emits = defineEmits(['fav-updated'])
+const emits = defineEmits(['fav-updated', 'sel-updated'])
 </script>
 
 <template>
@@ -47,7 +48,9 @@ const emits = defineEmits(['fav-updated'])
     <span class="top-right icon is-size-4" @click="toggle_fav" v-on:click.stop>
       <i :class="icon_class"></i>
     </span>
-    <div class="is-size-1 bottom-center is-unselectable">{{ emoji }}</div>
-    <div class="bottom-right has-text-primary-light">{{ money_due }}€</div>
+    <div class="is-size-1 emoji-person is-unselectable">{{ emoji }}</div>
+    <div class="bottom-right has-text-primary-light">
+      {{ money_due.toFixed(2) }}€
+    </div>
   </div>
 </template>

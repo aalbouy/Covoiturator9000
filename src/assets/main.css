@@ -1,10 +1,11 @@
 @import './base.css';
 
 #app {
-  max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   font-weight: normal;
+  height: 100vh;
+  width: 100vw;
 }
 
 a,
@@ -26,22 +27,6 @@ a,
     display: flex;
     place-items: center;
   }
-
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
-}
-
-.person_form {
-  display: flex;
-  width: 90%;
-  align-content: center;
-}
-
-.person {
-  height: 200px;
 }
 
 .custom-box {
@@ -72,4 +57,43 @@ a,
   position: absolute;
   bottom: 3%;
   right: 3%;
+}
+
+.section {
+  padding-top: 1.5rem; /* Adjust top padding as needed */
+}
+
+.container {
+  width: 75%;
+  margin: 0 auto;
+}
+
+.debug {
+  background-color: red;
+}
+
+.debug2 {
+  background-color: green;
+}
+
+.valid-popup {
+  width: 50%;
+}
+
+.emoji-person {
+  position: absolute;
+  bottom: 10%;
+  left: 20%;
+  /* font-size: calc(1rem + 5vh); */
+}
+
+.horizontal-scrollbar {
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.hide-scrollbar {
+  overflow-x: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
