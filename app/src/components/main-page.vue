@@ -1,30 +1,17 @@
 <script setup>
-import { ref, computed, nextTick } from 'vue'
-import Person from './components/person-item.vue'
-import RideSelector from './components/ride-selector.vue'
+import { ref, computed, nextTick, onMounted } from 'vue'
+import axios from 'axios'
+
+import Person from './main-page-comp/person-item.vue'
+import RideSelector from './main-page-comp/ride-selector.vue'
 
 const popupInput = ref(null)
 
 const persons = ref([])
 const new_person_name = ref('')
 const new_person_emoji = ref('')
-const id_person = ref('')
 
 const price_per_km = ref(0.12)
-
-const id_ride = ref('')
-const rides = ref([
-  {
-    id: id_ride.value++,
-    name: '🍔 BK',
-    price: 3.21,
-  },
-  {
-    id: id_ride.value++,
-    name: '💼 Travail',
-    price: 4.56,
-  },
-])
 
 const modal_opened = ref(false)
 
@@ -36,15 +23,14 @@ function add_person() {
     return
   }
 
-  persons.value.push({
-    id: id_person.value++,
+  axios.post('http://localhost:3000/api/persons', { 
     name: new_person_name.value,
     emoji: new_person_emoji.value,
-    money_due: 0.0,
-    is_fav: false,
-    force: 0,
-    is_selected: false,
-  })
+   })
+    .then(updatePersons)
+    .catch(function (err) {
+      console.log(err)
+    })
 
   if (modal_opened.value) {
     toggle_modal()
@@ -68,14 +54,6 @@ function handle_emit_sel(name, sel) {
   }
 }
 
-function handle_emit_new_ride(name, price) {
-  rides.value.push({
-    id: id_ride.value++,
-    name: name,
-    price: price,
-  })
-}
-
 function toggle_modal() {
   if (new_person_name.value.length === 0) {
     return
@@ -95,10 +73,10 @@ function toggle_modal() {
   }
 }
 
-const nb_person_sel = computed(() => {
+const persons_sel = computed(() => {
   return persons.value.filter(p => {
     return p.is_selected
-  }).length
+  })
 })
 
 const sorted_persons = computed(() => {
@@ -110,6 +88,16 @@ const sorted_persons = computed(() => {
     }
     return a.is_fav ? -1 : 1
   })
+})
+
+function updatePersons() {
+  axios
+    .get('http://localhost:3000/api/persons')
+    .then(response => {persons.value = response.data})
+}
+
+onMounted(() => {
+  updatePersons()
 })
 </script>
 
@@ -146,12 +134,10 @@ const sorted_persons = computed(() => {
       aria-label="close"
     ></button>
   </div>
-  <div class="container is-three-quarters is-centered">
+  <div class="container">
     <RideSelector
-      v-model:rides="rides"
-      v-model:nb_persons="nb_person_sel"
+      v-model:persons_sel="persons_sel"
       v-model:price_per_km="price_per_km"
-      @new-ride="handle_emit_new_ride"
     />
     <hr class="has-text-centered" />
     <div class="field is-grouped is-justify-content-center">
