@@ -5,7 +5,6 @@ import MainPage from './components/main-page.vue'
 import SettingsPage from './components/settings-page.vue'
 
 const currentPage = ref('main')
-// const table = ref([])
 
 function changePage(page) {
   currentPage.value = page
@@ -35,14 +34,14 @@ function testReq() {
     <footer class="my-footer has-background-inherit is-centered">
       <div class="columns buttons has-addons is-centered is-mobile m-0">
         <button
-          class="column button is-primary is-third"
+          class="column button is-primary is-half"
           :class="{ 'is-active': currentPage === 'main' }"
           @click="changePage('main')"
         >
           🚗 Trajets
         </button>
         <button
-          class="column button is-primary is-third"
+          class="column button is-primary is-half"
           :class="{ 'is-active': currentPage === 'settings' }"
           @click="changePage('settings')"
         >

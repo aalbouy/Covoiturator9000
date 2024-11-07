@@ -27,4 +27,18 @@ router.post("/", (req, res) => {
   });
 });
 
+router.post("/favorite", (req, res) => {
+  const { id, is_fav } = req.body;
+
+  const update = db.prepare("UPDATE persons SET is_fav = (?) WHERE id = (?)");
+  const changes = update.run(+is_fav, id).changes;
+
+  if (!changes) {
+    return res.status(500).json({ error: err.message });
+  }
+  res.json({
+    message: "Success"
+  });
+});
+
 module.exports = router;

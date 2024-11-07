@@ -6,6 +6,7 @@ import Person from './main-page-comp/person-item.vue'
 import RideSelector from './main-page-comp/ride-selector.vue'
 
 const popupInput = ref(null)
+const personDisplay = ref([])
 
 const persons = ref([])
 const new_person_name = ref('')
@@ -40,18 +41,33 @@ function add_person() {
   new_person_emoji.value = ''
 }
 
-function handle_emit_fav(name, fav) {
-  const person = persons.value.find(i => i.name === name)
+function handle_emit_fav(id, fav) {
+  const person = persons.value.find(i => i.id === id)
   if (person) {
-    person.is_fav = fav
+    axios
+      .post('http://localhost:3000/api/persons/favorite', {
+        is_fav: fav,
+        id: person.id
+      })
+      .then(updatePersons)
+      .catch(function (err) {
+        console.log(err)
+      })
   }
 }
 
-function handle_emit_sel(name, sel) {
-  const person = persons.value.find(i => i.name === name)
+function handle_emit_sel(id, sel) {
+  const person = persons.value.find(i => i.id === id)
   if (person) {
     person.is_selected = sel
   }
+}
+
+function handle_emit_new_ride_added() {
+  personDisplay.value.forEach(element => {
+    element.reset_selected();
+  });
+  updatePersons();
 }
 
 function toggle_modal() {
@@ -80,7 +96,7 @@ const persons_sel = computed(() => {
 })
 
 const sorted_persons = computed(() => {
-  return persons.value.slice().sort((a, b) => {
+  return [...persons.value].slice().sort((a, b) => {
     // First, sort by favorite status (favorited items come first)
     if (a.is_fav === b.is_fav) {
       // If both have the same favorite status, sort alphabetically by name
@@ -93,7 +109,7 @@ const sorted_persons = computed(() => {
 function updatePersons() {
   axios
     .get('http://localhost:3000/api/persons')
-    .then(response => {persons.value = response.data})
+    .then(response => { persons.value = [...response.data]})
 }
 
 onMounted(() => {
@@ -102,67 +118,74 @@ onMounted(() => {
 </script>
 
 <template>
-  <div
-    id="modal-validation"
-    :class="{ 'is-active': modal_opened }"
-    class="modal"
-  >
-    <div class="modal-background" @click="toggle_modal"></div>
-    <div class="modal-content valid-popup">
-      <div class="box">
-        <p class="is-size-5 has-text-centered mb-4">
-          Choisir l'émoji pour {{ new_person_name }} ?
-        </p>
-        <input
-          ref="popupInput"
-          class="input mb-4 mgl-large mgr-large"
-          type="text"
-          placeholder="🤪"
-          v-model="new_person_emoji"
-        />
-        <div class="buttons is-centered mb-4">
-          <button class="button is-success" @click="add_person">Valider</button>
-          <button class="button is-danger" @click="toggle_modal">
-            Annuler
-          </button>
+  <div>
+    <div
+      id="modal-validation"
+      :class="{ 'is-active': modal_opened }"
+      class="modal"
+    >
+      <div class="modal-background" @click="toggle_modal"></div>
+      <div class="modal-content valid-popup">
+        <div class="box">
+          <p class="is-size-5 has-text-centered mb-4">
+            Choisir l'émoji pour {{ new_person_name }} ?
+          </p>
+          <input
+            ref="popupInput"
+            class="input mb-4 mgl-large mgr-large"
+            type="text"
+            placeholder="🤪"
+            v-model="new_person_emoji"
+          />
+          <div class="buttons is-centered mb-4">
+            <button class="button is-success" @click="add_person">Valider</button>
+            <button class="button is-danger" @click="toggle_modal">
+              Annuler
+            </button>
+          </div>
         </div>
       </div>
+      <button
+        class="modal-close is-large"
+        @click="toggle_modal"
+        aria-label="close"
+      ></button>
     </div>
-    <button
-      class="modal-close is-large"
-      @click="toggle_modal"
-      aria-label="close"
-    ></button>
-  </div>
-  <div class="container">
-    <RideSelector
-      v-model:persons_sel="persons_sel"
-      v-model:price_per_km="price_per_km"
-    />
-    <hr class="has-text-centered" />
-    <div class="field is-grouped is-justify-content-center">
-      <p class="control is-expanded">
-        <input
-          class="input"
-          type="text"
-          placeholder="Nom"
-          v-model="new_person_name"
-          @keyup.enter="toggle_modal"
-        />
-      </p>
-      <p class="control">
-        <button @click="toggle_modal" class="button is-info">Ajouter</button>
-      </p>
-    </div>
-    <div class="fixed-grid has-2-cols">
-      <div class="grid">
-        <div v-for="p in sorted_persons" :key="p.id">
-          <Person
-            :name="p.name"
-            :emoji="p.emoji"
-            @sel-updated="handle_emit_sel"
-            @fav-updated="handle_emit_fav"
+    <div class="container">
+      <RideSelector
+        v-model:persons_sel="persons_sel"
+        v-model:price_per_km="price_per_km"
+        @new_ride_added="handle_emit_new_ride_added"
+      />
+      <hr class="has-text-centered" />
+      <div class="field is-grouped is-justify-content-center">
+        <p class="control is-expanded">
+          <input
+            class="input"
+            type="text"
+            placeholder="Nom"
+            v-model="new_person_name"
+            @keyup.enter="toggle_modal"
           />
+        </p>
+        <p class="control">
+          <button @click="toggle_modal" class="button is-info">Ajouter</button>
+        </p>
+      </div>
+      <div class="fixed-grid has-2-cols">
+        <div class="grid">
+          <div v-for="p in sorted_persons" :key="p.id">
+            <Person
+              ref="personDisplay"
+              :name="p.name"
+              :emoji="p.emoji"
+              :money="p.money"
+              :is_fav="p.is_fav"
+              :id="p.id"
+              @sel-updated="handle_emit_sel"
+              @fav-updated="handle_emit_fav"
+            />
+          </div>
         </div>
       </div>
     </div>

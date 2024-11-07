@@ -4,15 +4,18 @@ import { ref, computed } from 'vue'
 const props = defineProps({
   name: String,
   emoji: String,
+  money: Number,
+  is_fav: [Boolean, Number],
+  id: Number,
 })
 
-const money_due = ref(0)
-const is_fav = ref(false)
+const localIsFav = ref(props.is_fav)
+
 const is_selected = ref(false)
 
 // Computed property to dynamically set the icon class based on `isActive`
 const icon_class = computed(() =>
-  is_fav.value ? 'mdi mdi-star' : 'mdi mdi-star-outline',
+localIsFav.value ? 'mdi mdi-star' : 'mdi mdi-star-outline',
 )
 
 const background_class = computed(() =>
@@ -22,14 +25,21 @@ const background_class = computed(() =>
 )
 
 function toggle_fav() {
-  is_fav.value = !is_fav.value
-  emits('fav-updated', props.name, is_fav.value)
+  localIsFav.value = !localIsFav.value;
+  emits('fav-updated', props.id, localIsFav.value);
 }
 
 function toggle_selected() {
-  is_selected.value = !is_selected.value
-  emits('sel-updated', props.name, is_selected.value)
+  is_selected.value = !is_selected.value;
+  emits('sel-updated', props.id, is_selected.value);
 }
+
+function reset_selected() {
+  is_selected.value = false;
+  emits('sel-updated', props.id, is_selected.value);
+}
+
+defineExpose({reset_selected})
 
 const emits = defineEmits(['fav-updated', 'sel-updated'])
 </script>
@@ -43,14 +53,14 @@ const emits = defineEmits(['fav-updated', 'sel-updated'])
     <div
       class="top-left has-text-weight-bold is-family-primary is-size-2 is-unselectable"
     >
-      {{ name }}
+      {{ props.name }}
     </div>
     <span class="top-right icon is-size-4" @click="toggle_fav" v-on:click.stop>
       <i :class="icon_class"></i>
     </span>
-    <div class="is-size-1 emoji-person is-unselectable">{{ emoji }}</div>
+    <div class="is-size-1 emoji-person is-unselectable">{{ props.emoji }}</div>
     <div class="bottom-right has-text-primary-light">
-      {{ money_due.toFixed(2) }}€
+      {{ props.money.toFixed(2) }}€
     </div>
   </div>
 </template>

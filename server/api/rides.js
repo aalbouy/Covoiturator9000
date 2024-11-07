@@ -38,9 +38,7 @@ router.post("/", (req, res) => {
     console.log(price_per_person)
 
   if (preset_id !== -1) { // Do not insert preset if none was selected
-    const insert = db.prepare(
-      "INSERT INTO rides (price, preset_id) VALUES (?, ?)"
-    );
+    const insert = db.prepare("INSERT INTO rides (price, preset_id) VALUES (?, ?)");
     lastId = insert.run(price, preset_id).lastInsertRowid;
   } else {
     const insert = db.prepare("INSERT INTO rides (price) VALUES (?)");
@@ -51,6 +49,20 @@ router.post("/", (req, res) => {
     return res.status(500).json({ error: err.message });
   }
 
+  const ride_id = lastId;
+
+  const person_ride_req = db.prepare("INSERT INTO person_rides (person_id, ride_id) VALUES (?, ?)");
+  const person_add_money_req = db.prepare("UPDATE persons SET money = money + " + price_per_person + " WHERE id = (?)");
+  persons_id.forEach(id => {
+    lastId = person_ride_req.run(id, ride_id).lastInsertRowid;
+    if (!lastId) {
+      return res.status(500).json({ error: err.message });
+    }
+    lastId = person_add_money_req.run(id).lastInsertRowid;
+    if (!lastId) {
+      return res.status(500).json({ error: err.message });
+    }
+  });
 
   res.json({
     message: "Success",
