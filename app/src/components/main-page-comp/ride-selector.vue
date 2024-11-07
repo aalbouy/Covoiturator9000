@@ -253,8 +253,8 @@ const emits = defineEmits(['new_ride_added'])
         </button>
       </div>
     </div>
-    <div class="columns">
-      <div class="column p-0">
+    <div class="columns is-mobile">
+      <div class="column m-0">
         <div class="columns is-1 is-mobile horizontal-scrollbar hide-scrollbar">
           <div v-for="p in presets" :key="p.id">
             <div class="column is-narrow" @click="preset_clicked(p.id)">
@@ -263,7 +263,7 @@ const emits = defineEmits(['new_ride_added'])
           </div>
         </div>
       </div>
-      <div class="column is-narrow p-0">
+      <div class="column is-narrow m-0">
         <button
           class="tag button is-outlined is-info"
           @click="toggle_new_preset_modal"
