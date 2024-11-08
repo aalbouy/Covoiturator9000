@@ -24,10 +24,11 @@ function add_person() {
     return
   }
 
-  axios.post('http://localhost:3000/api/persons', { 
-    name: new_person_name.value,
-    emoji: new_person_emoji.value,
-   })
+  axios
+    .post('http://localhost:3000/api/persons', {
+      name: new_person_name.value,
+      emoji: new_person_emoji.value,
+    })
     .then(updatePersons)
     .catch(function (err) {
       console.log(err)
@@ -47,7 +48,7 @@ function handle_emit_fav(id, fav) {
     axios
       .post('http://localhost:3000/api/persons/favorite', {
         is_fav: fav,
-        id: person.id
+        id: person.id,
       })
       .then(updatePersons)
       .catch(function (err) {
@@ -65,9 +66,9 @@ function handle_emit_sel(id, sel) {
 
 function handle_emit_new_ride_added() {
   personDisplay.value.forEach(element => {
-    element.reset_selected();
-  });
-  updatePersons();
+    element.reset_selected()
+  })
+  updatePersons()
 }
 
 function toggle_modal() {
@@ -107,9 +108,9 @@ const sorted_persons = computed(() => {
 })
 
 function updatePersons() {
-  axios
-    .get('http://localhost:3000/api/persons')
-    .then(response => { persons.value = [...response.data]})
+  axios.get('http://localhost:3000/api/persons').then(response => {
+    persons.value = [...response.data]
+  })
 }
 
 onMounted(() => {
@@ -138,7 +139,9 @@ onMounted(() => {
             v-model="new_person_emoji"
           />
           <div class="buttons is-centered mb-4">
-            <button class="button is-success" @click="add_person">Valider</button>
+            <button class="button is-success" @click="add_person">
+              Valider
+            </button>
             <button class="button is-danger" @click="toggle_modal">
               Annuler
             </button>

@@ -15,7 +15,7 @@ const is_selected = ref(false)
 
 // Computed property to dynamically set the icon class based on `isActive`
 const icon_class = computed(() =>
-localIsFav.value ? 'mdi mdi-star' : 'mdi mdi-star-outline',
+  localIsFav.value ? 'mdi mdi-star' : 'mdi mdi-star-outline',
 )
 
 const background_class = computed(() =>
@@ -25,21 +25,21 @@ const background_class = computed(() =>
 )
 
 function toggle_fav() {
-  localIsFav.value = !localIsFav.value;
-  emits('fav-updated', props.id, localIsFav.value);
+  localIsFav.value = !localIsFav.value
+  emits('fav-updated', props.id, localIsFav.value)
 }
 
 function toggle_selected() {
-  is_selected.value = !is_selected.value;
-  emits('sel-updated', props.id, is_selected.value);
+  is_selected.value = !is_selected.value
+  emits('sel-updated', props.id, is_selected.value)
 }
 
 function reset_selected() {
-  is_selected.value = false;
-  emits('sel-updated', props.id, is_selected.value);
+  is_selected.value = false
+  emits('sel-updated', props.id, is_selected.value)
 }
 
-defineExpose({reset_selected})
+defineExpose({ reset_selected })
 
 const emits = defineEmits(['fav-updated', 'sel-updated'])
 </script>

@@ -41,4 +41,46 @@ router.post("/favorite", (req, res) => {
   });
 });
 
+router.post("/update", (req, res) => {
+  const { id, name, emoji } = req.body;
+
+  const update = db.prepare("UPDATE persons SET name = (?), emoji = (?) WHERE id = (?)");
+  const changes = update.run(name, emoji, id).changes;
+
+  if (!changes) {
+    return res.status(500).json({ error: err.message });
+  }
+  res.json({
+    message: "Success"
+  });
+})
+
+router.post("/refund", (req, res) => {
+  const { id } = req.body;
+
+  const update = db.prepare("UPDATE persons SET money = 0 WHERE id = (?)");
+  const changes = update.run(id).changes;
+
+  if (!changes) {
+    return res.status(500).json({ error: err.message });
+  }
+  res.json({
+    message: "Success"
+  });
+})
+
+router.post("/delete", (req, res) => {
+  const { id } = req.body;
+
+  const update = db.prepare("UPDATE persons SET is_hidden = true WHERE id = (?)");
+  const changes = update.run(id).changes;
+
+  if (!changes) {
+    return res.status(500).json({ error: err.message });
+  }
+  res.json({
+    message: "Success"
+  });
+})
+
 module.exports = router;

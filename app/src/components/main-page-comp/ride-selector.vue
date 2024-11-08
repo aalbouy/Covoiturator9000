@@ -211,14 +211,16 @@ const emits = defineEmits(['new_ride_added'])
       <div class="modal-content">
         <div class="box">
           <p class="is-size-5 has-text-centered mb-4">
-            Valider le trajet pour {{ props.persons_sel.length }} personnes ? ({{
-              sel_persons_name
-            }})
+            Valider le trajet pour {{ props.persons_sel.length }} personnes ?
+            ({{ sel_persons_name }})
           </p>
           <p class="has-text-centered mb-4">
             Cela reviendra à
-            {{ Math.round((curr_price / (props.persons_sel.length + 1)) * 100) / 100 }} € par
-            personne
+            {{
+              Math.round((curr_price / (props.persons_sel.length + 1)) * 100) /
+              100
+            }}
+            € par personne
           </p>
           <div class="buttons is-centered mb-4">
             <button class="button is-success" @click="new_ride_validated">

@@ -15,7 +15,6 @@ function testReq() {
     .get('http://localhost:3000/api/rides')
     .then(response => console.log(response))
 }
-
 </script>
 
 <template>
