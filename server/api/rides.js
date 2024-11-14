@@ -72,10 +72,54 @@ router.get("/complete", (req, res) => {
        FROM  person_rides
        INNER JOIN persons p ON person_id = p.id
        INNER JOIN rides r ON ride_id = r.id
-       LEFT JOIN presets p2 ON r.preset_id  = p2.id`
+       LEFT JOIN presets p2 ON r.preset_id  = p2.id
+       ORDER BY r.date DESC`
     )
     .all();
   res.json(rows);
+});
+
+router.post("/delete", (req, res) => {
+  const { id } = req.body;
+  const query = db
+  .prepare(
+    `SELECT p.id AS pers_id, r.id AS ride_id, r.price
+     FROM  person_rides
+     INNER JOIN persons p ON person_id = p.id
+     INNER JOIN rides r ON ride_id = r.id
+     LEFT JOIN presets p2 ON r.preset_id  = p2.id
+     WHERE ride_id = (?)`
+  );
+
+  rides = query.all(id);
+
+  if (!rides) {
+    return res.status(500).json({ error: err.message });
+  }
+  
+  let lastId;
+  const price_per_person =
+    Math.round((rides[0].price / (rides.length + 1)) * 100) / 100;
+  
+  const person_remove_money_req = db.prepare(
+    "UPDATE persons SET money = money - " + price_per_person + " WHERE id = (?)"
+  );
+  rides.forEach((r) => {
+    let changes = person_remove_money_req.run(r.pers_id).changes;
+    if (!changes) {
+      return res.status(500).json({ error: err.message });
+    }
+  });
+
+  const delete_ride_req = db.prepare("DELETE FROM rides WHERE id = (?);");
+  const changes = delete_ride_req.run(rides[0].ride_id).changes;
+
+  if (!changes) {
+    return res.status(500).json({ error: err.message });
+  }
+  res.json({
+    message: "Success",
+  });
 });
 
 module.exports = router;
