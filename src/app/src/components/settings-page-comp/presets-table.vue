@@ -13,7 +13,7 @@ const selPresetName = ref('')
 const selPresetPrice = ref('')
 
 function updatePresets() {
-  axios.get('http://localhost:3000/api/presets').then(response => {
+  axios.get('/presets').then(response => {
     presets.value = [...response.data]
   })
 }
@@ -26,7 +26,7 @@ function updatePresetVar(id) {
 
 function presetDeletionValidated() {
   axios
-    .post('http://localhost:3000/api/presets/delete', {
+    .post('/presets/delete', {
       id: selPresetId.value,
     })
     .then(updatePresets)
@@ -44,7 +44,7 @@ function presetEditReq(id) {
 
 function presetEditValidated() {
   axios
-    .post('http://localhost:3000/api/presets/update', {
+    .post('/presets/update', {
       id: selPresetId.value,
       name: selPresetName.value,
       price: selPresetPrice.value,
@@ -139,7 +139,7 @@ onMounted(() => {
     ></button>
   </div>
   
-  <table class="table has-text-centered is-striped is-size-5 is-fullwidth">
+  <table class="table has-text-centered is-striped is-fullwidth">
     <thead>
       <tr>
         <th>Nom</th>

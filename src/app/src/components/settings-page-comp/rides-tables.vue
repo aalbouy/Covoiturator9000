@@ -12,7 +12,7 @@ const selRidePrice = ref(0)
 const modal_delete_opened = ref(false)
 
 function updateRides() {
-  axios.get('http://localhost:3000/api/rides/complete').then(response => {
+  axios.get('/rides/complete').then(response => {
     rides.value = []
     let raw = [...response.data]
     raw.forEach(r => {
@@ -43,7 +43,7 @@ function rideDeleteReq(id) {
 
 async function rideDeleteValidated() {
   await axios
-    .post('http://localhost:3000/api/rides/delete', {
+    .post('/rides/delete', {
       id: selRideId.value,
     })
     .catch(function (err) {
@@ -91,7 +91,7 @@ onMounted(() => {
         ></button>
       </div>
 
-    <table class="table has-text-centered is-striped is-size-6 is-fullwidth">
+    <table class="table has-text-centered is-striped is-fullwidth">
       <thead>
         <tr>
           <th>Date</th>

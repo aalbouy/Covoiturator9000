@@ -16,5 +16,5 @@ app.use('/api/rides', ridesRouter);
 app.use('/api/presets', presetsRouter);
 
 app.listen(3000, () => {
-  console.log("Serveur démarré (http://localhost:3000/) !");
+  console.log("Serveur démarré (http://127.0.0.1:3000/) !");
 });

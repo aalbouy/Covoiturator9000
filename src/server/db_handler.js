@@ -2,7 +2,7 @@ const Database = require("better-sqlite3");
 const fs = require("fs");
 const path = require("path");
 
-const dbFile = "kovoiturator.db";
+const dbFile = "./db/kovoiturator.db";
 const schemaFile = path.join(__dirname, "schema.sql");
 
 let db;

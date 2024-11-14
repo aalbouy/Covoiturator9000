@@ -51,14 +51,14 @@ const emits = defineEmits(['fav-updated', 'sel-updated'])
     @click="toggle_selected"
   >
     <div
-      class="top-left has-text-weight-bold is-family-primary is-size-2 is-unselectable"
+      class="top-left has-text-weight-bold is-family-primary is-size-5 is-unselectable"
     >
       {{ props.name }}
     </div>
     <span class="top-right icon is-size-4" @click="toggle_fav" v-on:click.stop>
       <i :class="icon_class"></i>
     </span>
-    <div class="is-size-1 emoji-person is-unselectable">{{ props.emoji }}</div>
+    <div class="is-size-4 emoji-person is-unselectable">{{ props.emoji }}</div>
     <div class="bottom-right has-text-primary-light">
       {{ props.money.toFixed(2) }}€
     </div>

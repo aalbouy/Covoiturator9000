@@ -1,0 +1,23 @@
+version: "3.9"
+services:
+  covoiturator9000-app:
+    build: ./src/app
+    container_name: covoitapp
+    environment:
+      - TZ=Europe/Paris
+    ports:
+      - 9000:9000
+    restart: unless-stopped
+    depends_on:
+      - covoiturator9000-srv
+
+  covoiturator9000-srv:
+    build: ./src/server
+    container_name: covoitsrv
+    environment:
+      - TZ=Europe/Paris
+    volumes:
+    - ./src/server/db:/server/db
+    ports:
+      - 3000:3000
+    restart: unless-stopped

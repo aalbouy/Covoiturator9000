@@ -10,9 +10,11 @@ function changePage(page) {
   currentPage.value = page
 }
 
+axios.defaults.baseURL = 'https://' + window.location.hostname + '/api'
+
 function testReq() {
   axios
-    .get('http://localhost:3000/api/rides')
+    .get('/rides')
     .then(response => console.log(response))
 }
 </script>

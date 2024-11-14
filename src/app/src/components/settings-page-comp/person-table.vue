@@ -14,7 +14,7 @@ const modal_refund_opened = ref(false)
 const modal_delete_opened = ref(false)
 
 function updatePersons() {
-  axios.get('http://localhost:3000/api/persons').then(response => {
+  axios.get('/persons').then(response => {
     persons.value = [...response.data]
   })
 }
@@ -32,7 +32,7 @@ function personRefundReq(id) {
 
 function personRefundValidated() {
   axios
-    .post('http://localhost:3000/api/persons/refund', {
+    .post('/persons/refund', {
       id: selPersId.value,
     })
     .then(updatePersons)
@@ -50,7 +50,7 @@ function personDeleteReq(id) {
 
 function personDeleteValidated() {
   axios
-    .post('http://localhost:3000/api/persons/delete', {
+    .post('/persons/delete', {
       id: selPersId.value,
     })
     .then(updatePersons)
@@ -68,7 +68,7 @@ function personEditReq(id) {
 
 function personEditValidated() {
   axios
-    .post('http://localhost:3000/api/persons/update', {
+    .post('/persons/update', {
       id: selPersId.value,
       name: selPersonName.value,
       emoji: selPersonEmoji.value,
@@ -187,7 +187,7 @@ onMounted(() => {
       ></button>
     </div>
 
-    <table class="table has-text-centered is-striped is-size-5 is-fullwidth">
+    <table class="table has-text-centered is-striped is-fullwidth">
       <thead>
         <tr>
           <th>Nom</th>

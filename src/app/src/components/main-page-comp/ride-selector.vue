@@ -68,7 +68,7 @@ function new_preset_validated() {
   }
 
   axios
-    .post('http://localhost:3000/api/presets', {
+    .post('/presets', {
       price: new_preset_price.value,
       name: new_preset_name.value,
     })
@@ -91,7 +91,7 @@ async function new_ride_validated() {
   let persons_id = props.persons_sel.map(person => person.id)
 
   await axios
-    .post('http://localhost:3000/api/rides', {
+    .post('/rides', {
       persons_id: persons_id,
       price: curr_price.value,
       preset_id: cur_preset_id.value,
@@ -109,7 +109,7 @@ async function new_ride_validated() {
 }
 
 function updatePresets() {
-  axios.get('http://localhost:3000/api/presets').then(response => {
+  axios.get('/presets').then(response => {
     presets.value = response.data
   })
 }
@@ -157,7 +157,7 @@ const emits = defineEmits(['new_ride_added'])
       <div class="modal-background" @click="toggle_new_preset_modal"></div>
       <div class="modal-content">
         <div class="box">
-          <p class="is-size-5 has-text-centered mb-4">
+          <p class="has-text-centered mb-4">
             Ajout d'un nouveau trajet
           </p>
           <div class="field-group has-text-centered">
@@ -187,7 +187,7 @@ const emits = defineEmits(['new_ride_added'])
               </div>
             </div>
           </div>
-          <div class="buttons is-centered mb-4">
+          <div class="buttons is-centered mb-4 mt-4">
             <button class="button is-success" @click="new_preset_validated">
               Valider
             </button>

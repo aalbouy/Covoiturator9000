@@ -25,7 +25,7 @@ function add_person() {
   }
 
   axios
-    .post('http://localhost:3000/api/persons', {
+    .post('/persons', {
       name: new_person_name.value,
       emoji: new_person_emoji.value,
     })
@@ -46,7 +46,7 @@ function handle_emit_fav(id, fav) {
   const person = persons.value.find(i => i.id === id)
   if (person) {
     axios
-      .post('http://localhost:3000/api/persons/favorite', {
+      .post('/persons/favorite', {
         is_fav: fav,
         id: person.id,
       })
@@ -108,8 +108,9 @@ const sorted_persons = computed(() => {
 })
 
 function updatePersons() {
-  axios.get('http://localhost:3000/api/persons').then(response => {
-    persons.value = [...response.data]
+  axios.get('/persons').then(response => {
+    persons.value = response.data
+    console.log(persons.value)
   })
 }
 
@@ -126,7 +127,7 @@ onMounted(() => {
       class="modal"
     >
       <div class="modal-background" @click="toggle_modal"></div>
-      <div class="modal-content valid-popup">
+      <div class="modal-content">
         <div class="box">
           <p class="is-size-5 has-text-centered mb-4">
             Choisir l'émoji pour {{ new_person_name }} ?
